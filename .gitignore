@@ -1,0 +1,38 @@
+# === General ===
+.DS_Store
+.env
+*.log
+*.tmp
+*.swp
+
+# === Java / Maven (Spring Boot Backend) ===
+/backend/target/
+/backend/.classpath
+/backend/.project
+/backend/.settings/
+/backend/.idea/
+/backend/*.iml
+
+# === Node.js / React (Frontend) ===
+/frontend/node_modules/
+/frontend/.env
+/frontend/build/
+/frontend/.next/
+/frontend/.cache/
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+# === OS Files ===
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# === IntelliJ IDEA ===
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# === VS Code ===
+.vscode/

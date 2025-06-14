@@ -1,0 +1,134 @@
+/* Reset some default margins and paddings for all elements */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Basic body and font styling */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f7fafc;
+  color: #2d3748;
+  line-height: 1.6;
+}
+
+/* Styling for the main container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header section */
+header {
+  background-color: #2b6cb0;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Form styling */
+input[type="number"],
+input[type="text"] {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  margin: 10px 0;
+}
+
+button {
+  background-color: #3182ce;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2b6cb0;
+}
+
+button:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+/* Account section */
+.account-list {
+  margin-top: 30px;
+}
+
+.account-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #edf2f7;
+  border-radius: 8px;
+}
+
+.account-item h4 {
+  font-size: 1.5rem;
+  color: #2b6cb0;
+}
+
+/* Transaction history */
+.transaction-history {
+  margin-top: 30px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.transaction-history h4 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.transaction-history ul {
+  list-style-type: none;
+}
+
+.transaction-history li {
+  padding: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.transaction-history li:last-child {
+  border-bottom: none;
+}
+
+/* Center the "Transfer Successful" and error message */
+.message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: red;
+}
+
+.message.success {
+  color: green;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  header {
+    font-size: 1.5rem;
+    padding: 15px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  input[type="number"], input[type="text"], button {
+    width: 100%;
+  }
+}
