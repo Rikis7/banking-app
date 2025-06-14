@@ -1,11 +1,21 @@
-# Use an OpenJDK base image
+# Use OpenJDK 17 base image
 FROM openjdk:17-jdk-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy the jar file built by Maven
-COPY target/*.jar app.jar
+# Copy Maven wrapper & project files
+COPY .mvn .mvn
+COPY mvnw pom.xml ./
 
-# Run the app
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Download dependencies
+RUN ./mvnw dependency:go-offline
+
+# Copy the source code
+COPY src ./src
+
+# Build the application
+RUN ./mvnw package -DskipTests
+
+# Run the application
+CMD ["java", "-jar", "target/*.jar"]
