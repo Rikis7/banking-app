@@ -1,23 +1,23 @@
-FROM openjdk:21-jdk-slim
+# ----------- Stage 1: Build JAR -----------
+FROM openjdk:21-jdk-slim AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and config
 COPY .mvn .mvn
 COPY mvnw pom.xml ./
-
-# Download dependencies
 RUN chmod +x mvnw && ./mvnw dependency:go-offline
 
-# Copy source
 COPY src ./src
-
-# Build the application
 RUN ./mvnw package -DskipTests
 
-# Copy JAR to run
-COPY target/*.jar app.jar
+# ----------- Stage 2: Run JAR -------------
+FROM openjdk:21-jdk-slim
 
-# Run the application
+WORKDIR /app
+
+# Copy only the JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
 CMD ["java", "-jar", "app.jar"]
