@@ -1,20 +1,23 @@
 FROM openjdk:21-jdk-slim
 
+# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and give execution permission
+# Copy Maven wrapper and config
 COPY .mvn .mvn
 COPY mvnw pom.xml ./
-RUN chmod +x mvnw
 
 # Download dependencies
-RUN ./mvnw dependency:go-offline
+RUN chmod +x mvnw && ./mvnw dependency:go-offline
 
-# Copy the source code
+# Copy source
 COPY src ./src
 
-# Build the app
+# Build the application
 RUN ./mvnw package -DskipTests
 
-# Run the app
-CMD ["java", "-jar", "target/*.jar"]
+# Copy JAR to run
+COPY target/*.jar app.jar
+
+# Run the application
+CMD ["java", "-jar", "app.jar"]
