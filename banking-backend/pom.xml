@@ -83,11 +83,7 @@
             <artifactId>mapper-size</artifactId>
             <version>5.0.0-alpha5</version>
         </dependency>
-        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>bankingapi</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
