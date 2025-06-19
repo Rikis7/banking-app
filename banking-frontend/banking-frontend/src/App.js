@@ -1,33 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CreateAccountForm from './CreateAccountForm';
-import AccountList from './AccountList';
-import TransactionHistory from './TransactionHistory';
 import DepositForm from './DepositForm';
 import WithdrawForm from './WithdrawForm';
 import TransferForm from './TransferForm';
+import TransactionHistory from './TransactionHistory';
+import { getAccounts } from './api';
 
 function App() {
   const [accounts, setAccounts] = useState([]);
-  const [message, setMessage] = useState('');
 
-  // Fetch accounts from backend API
   useEffect(() => {
-    fetch('http://localhost:8080/api/banking/accounts')
-      .then((res) => res.json())
-      .then(setAccounts)
-      .catch(() => setMessage('Failed to fetch accounts.'));
+    async function fetchData() {
+      try {
+        const data = await getAccounts();
+        setAccounts(data);
+      } catch {
+        alert('Failed to load accounts');
+      }
+    }
+    fetchData();
   }, []);
 
   return (
-    <div className="container">
-      <header>Banking App</header>
+    <div>
+      <h1>Banking App</h1>
+      <h2>Create New Account</h2>
       <CreateAccountForm setAccounts={setAccounts} />
-      <AccountList accounts={accounts} />
+      <h2>Bank Accounts</h2>
+      <ul>
+        {accounts.map(acc => (
+          <li key={acc.id}>
+            {acc.accountHolder} - Balance: ${acc.balance}
+          </li>
+        ))}
+      </ul>
       <TransactionHistory accountId={1} />
-      <DepositForm setAccounts={setAccounts} />
-      <WithdrawForm setAccounts={setAccounts} />
-      <TransferForm setAccounts={setAccounts} />
-      {message && <p className="message">{message}</p>}
+      <h2>Deposit Money</h2>
+      <DepositForm />
+      <h2>Withdraw Money</h2>
+      <WithdrawForm />
+      <h2>Transfer Money</h2>
+      <TransferForm />
     </div>
   );
 }

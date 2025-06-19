@@ -1,46 +1,25 @@
 import React, { useState } from 'react';
+import { withdraw } from './api';
 
-function WithdrawForm({ setAccounts }) {
+function WithdrawForm() {
   const [id, setId] = useState('');
   const [amount, setAmount] = useState('');
 
-  const withdrawMoney = (e) => {
-    e.preventDefault();
-    fetch(`http://localhost:8080/api/banking/withdraw/${id}?amount=${amount}`, {
-      method: 'PUT',
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setAccounts((prev) =>
-          prev.map((account) =>
-            account.id === id ? { ...account, balance: data.balance } : account
-          )
-        );
-        setId('');
-        setAmount('');
-      })
-      .catch(() => alert('Failed to withdraw money'));
+  const handleWithdraw = async () => {
+    try {
+      await withdraw(id, amount);
+      alert('Withdraw successful');
+    } catch {
+      alert('Failed to withdraw');
+    }
   };
 
   return (
-    <form onSubmit={withdrawMoney}>
-      <h3>Withdraw Money</h3>
-      <input
-        type="number"
-        placeholder="Account ID"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-        required
-      />
-      <input
-        type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        required
-      />
-      <button type="submit">Withdraw</button>
-    </form>
+    <div>
+      <input placeholder="Account ID" value={id} onChange={e => setId(e.target.value)} />
+      <input placeholder="Amount" value={amount} onChange={e => setAmount(e.target.value)} />
+      <button onClick={handleWithdraw}>Withdraw</button>
+    </div>
   );
 }
 
