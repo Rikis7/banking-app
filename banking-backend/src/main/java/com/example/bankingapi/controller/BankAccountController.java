@@ -16,7 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/banking")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://banking-app-rust-beta.vercel.app"
+})
 public class BankAccountController {
 
     @Autowired
