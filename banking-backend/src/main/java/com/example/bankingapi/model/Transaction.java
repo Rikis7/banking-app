@@ -7,32 +7,37 @@ import java.time.LocalDateTime;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    private Long accountId;
-    private String type; // "deposit", "withdraw", "transfer"
+    private String type;
     private double amount;
     private LocalDateTime dateTime;
 
-    // Constructors, getters, setters
+    @ManyToOne
+    private BankAccount account;
+
     public Transaction() {}
 
-    public Transaction(Long accountId, String type, double amount) {
-        this.accountId = accountId;
+    public Transaction(String type, double amount, BankAccount account) {
         this.type = type;
         this.amount = amount;
+        this.account = account;
         this.dateTime = LocalDateTime.now();
     }
 
     // Getters and setters
     public Long getId() { return id; }
-    public Long getAccountId() { return accountId; }
-    public void setAccountId(Long accountId) { this.accountId = accountId; }
+
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
     public double getAmount() { return amount; }
     public void setAmount(double amount) { this.amount = amount; }
+
     public LocalDateTime getDateTime() { return dateTime; }
     public void setDateTime(LocalDateTime dateTime) { this.dateTime = dateTime; }
+
+    public BankAccount getAccount() { return account; }
+    public void setAccount(BankAccount account) { this.account = account; }
 }

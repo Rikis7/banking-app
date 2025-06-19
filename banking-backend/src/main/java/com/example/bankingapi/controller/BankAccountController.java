@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/banking")
@@ -66,29 +67,36 @@ public class BankAccountController {
         return ResponseEntity.ok("Account deleted successfully");
     }
 
-    @PutMapping("/transfer")
-    public ResponseEntity<?> transfer(
+    @PostMapping("/transfer")
+    public ResponseEntity<String> transferMoney(
             @RequestParam Long fromId,
             @RequestParam Long toId,
             @RequestParam double amount) {
-        if (amount <= 0) return ResponseEntity.badRequest().body("Amount must be positive");
 
         BankAccount from = bankAccountRepository.findById(fromId).orElse(null);
         BankAccount to = bankAccountRepository.findById(toId).orElse(null);
-        if (from == null || to == null) return ResponseEntity.badRequest().body("Invalid account(s)");
-        if (from.getBalance() < amount) return ResponseEntity.badRequest().body("Insufficient funds");
+
+        if (from == null || to == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("One of the accounts not found");
+        }
+
+        if (from.getBalance() < amount) {
+            return ResponseEntity.badRequest().body("Insufficient funds");
+        }
 
         from.setBalance(from.getBalance() - amount);
         to.setBalance(to.getBalance() + amount);
+
         bankAccountRepository.save(from);
         bankAccountRepository.save(to);
 
-        // Log transactions for both accounts
-        transactionRepository.save(new Transaction(fromId, "transfer-out", -amount));
-        transactionRepository.save(new Transaction(toId, "transfer-in", amount));
+        // Save transactions...
+        transactionRepository.save(new Transaction("transfer-out", amount * -1, from));
+        transactionRepository.save(new Transaction("transfer-in", amount, to));
 
         return ResponseEntity.ok("Transfer successful");
     }
+
 
 
 
@@ -105,38 +113,32 @@ public class BankAccountController {
 
     // Deposit money into an account
     @PutMapping("/deposit/{id}")
-    public ResponseEntity<?> depositMoney(@PathVariable Long id, @RequestParam double amount) {
+    public ResponseEntity<BankAccount> depositMoney(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> payload) {
+
+        double amount = Double.parseDouble(payload.get("balance").toString());
         BankAccount account = bankAccountRepository.findById(id).orElse(null);
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+        if (account != null) {
+            account.setBalance(account.getBalance() + amount);
+            return ResponseEntity.ok(bankAccountRepository.save(account));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        account.setBalance(account.getBalance() + amount);
-        bankAccountRepository.save(account);
-
-        // Log transaction
-        transactionRepository.save(new Transaction(id, "deposit", amount));
-
-        return ResponseEntity.ok(account);
     }
+
 
 
     // Withdraw money from an account
     @PutMapping("/withdraw/{id}")
-    public ResponseEntity<?> withdrawMoney(@PathVariable Long id, @RequestParam double amount) {
+    public ResponseEntity<?> withdrawMoney(@PathVariable Long id, @RequestBody BankAccount request) {
         BankAccount account = bankAccountRepository.findById(id).orElse(null);
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+        if (account != null) {
+            account.setBalance(account.getBalance() - request.getBalance());
+            bankAccountRepository.save(account);
+            return ResponseEntity.ok("Withdraw successful");
         }
-        if (account.getBalance() < amount) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient balance");
-        }
-        account.setBalance(account.getBalance() - amount);
-        bankAccountRepository.save(account);
-
-        // Log transaction
-        transactionRepository.save(new Transaction(id, "withdraw", amount));
-
-        return ResponseEntity.ok(account);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
     }
 
 
