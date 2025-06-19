@@ -1,7 +1,15 @@
-# Banking App
+### 🏦 Banking App (Full Stack)
 
-A simple full-stack banking web application built with **Spring Boot** (backend REST API) and **React** (frontend).  
-Users can create accounts, view balances, deposit, withdraw, transfer funds, and see transaction history.
+A responsive banking web app with full account and transaction management.  
+Built with **Spring Boot**, **React**, and deployed on **Render** + **Vercel**.
+
+🧩 Features:
+- Create, deposit, withdraw, transfer
+- View transaction history
+- Live backend & frontend
+
+🔗 [Live Demo](https://banking-app-rust-beta.vercel.app)  
+📁 [GitHub Repo](https://github.com/Rikis7/banking-app)
 
 ---
 
